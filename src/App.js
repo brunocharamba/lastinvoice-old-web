@@ -12,9 +12,12 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Montserrat', sans-serif;
   }
   html, body, #root, .app {
-    margin: 0px 20px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
     padding: 0 0 20px 0; 
-    /* height: 100%; */
   }
   a {
     color: inherit;
@@ -25,11 +28,6 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const Container = styled.div`
-  /* display: flex;
-  flex: 1;
-  flex-direction: column; */
-  /* height: 100% !important; */
-
   -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Slider from 'react-slick'
 import InputMask from 'react-input-mask'
+import { isMobile } from 'react-device-detect'
 import { Button, Card, Elevation, FormGroup, ControlGroup, InputGroup, Tab, Tabs, Position, Popover, Menu, MenuItem } from '@blueprintjs/core'
 import correios from '../../services/correios'
 import states from '../../constants/states'
+
+import MatModel from '../../components/InvoiceModels/MatModel'
 
 import { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator } from './styles'
 
@@ -123,12 +126,14 @@ function Invoice() {
     return (
       <form id="firstForm" onSubmit={handleSubmit}>
         <h2>Dados do Emissor</h2>
-        <FormGroup label="Nome" labelFor="text-input" labelInfo="(obrigatório)">
+        <FormGroup label="Nome" labelFor="text-em-name" labelInfo="(obrigatório)">
           <InputGroup
-            id="text-input"
+            id="text-em-name"
             placeholder="*Nome ou Razão Social"
+            autoComplete="nope"
             value={emmiter.name}
             onChange={(e) => setEmmiter({ ...emmiter, name: e.target.value })}
+            required
           />
         </FormGroup>
         <FormGroup label="CPF/CNPJ" labelFor="text-input" labelInfo="(obrigatório)">
@@ -137,53 +142,62 @@ function Invoice() {
             mask={emmiter.document?.type === 'CPF' ? '999.999.999-99' : '99.999.999/9999-99'}
             value={emmiter.document?.number}
             onChange={(e) => setEmmiter({ ...emmiter, document: { ...emmiter.document, number: e.target.value } })}
+            required
           >
             <InputGroup id="text-input" placeholder="*CPF ou CNPJ" leftElement={documentMenu} />
           </InputMask>
         </FormGroup>
-        <FormGroup label="CEP" labelFor="text-input" labelInfo="(obrigatório)">
+        <FormGroup label="CEP" labelFor="text-input" labelInfo="">
           <InputMask autoComplete="nope" mask="99999-999" value={emmiter.address.cep} onChange={(event) => handleCepChange(event, 'first')}>
-            <InputGroup id="text-input" placeholder="*CEP" autoComplete="nope" />
+            <InputGroup id="text-input" placeholder="CEP" autoComplete="nope" />
           </InputMask>
         </FormGroup>
-        <FormGroup label="Endereço" labelFor="text-input" labelInfo="(obrigatório)">
+        <FormGroup label="Endereço" labelFor="text-input">
           <InputGroup
             id="text-input"
-            placeholder="*Endereço"
+            placeholder="Endereço"
+            autoComplete="nope"
             value={emmiter.address.address}
-            onChange={(event) => setEmmiter({ address: { address: event.target.value } })}
+            onChange={(event) => setEmmiter({ ...emmiter, address: { address: event.target.value } })}
           />
           <Separator />
-          <ControlGroup vertical={false}>
+          <ControlGroup vertical={isMobile}>
             <InputGroup
               id="text-input"
-              placeholder="*Número"
+              placeholder="Número"
+              autoComplete="nope"
               value={emmiter.address.number}
-              onChange={(event) => setEmmiter({ address: { number: event.target.value } })}
+              onChange={(event) => setEmmiter({ ...emmiter, address: { number: event.target.value } })}
             />
+            <Separator />
             <InputGroup
               id="text-input"
               placeholder="Complemento"
+              autoComplete="nope"
               value={emmiter.address.comp}
-              onChange={(event) => setEmmiter({ address: { comp: event.target.value } })}
+              onChange={(event) => setEmmiter({ ...emmiter, address: { comp: event.target.value } })}
             />
           </ControlGroup>
           <Separator />
           <InputGroup
             id="text-input"
-            placeholder="*Cidade"
+            placeholder="Cidade"
+            autoComplete="nope"
             value={emmiter.address.city}
-            onChange={(event) => setEmmiter({ address: { city: event.target.value } })}
+            onChange={(event) => setEmmiter({ ...emmiter, address: { city: event.target.value } })}
           />
           <Separator />
-          <ControlGroup vertical={false}>
+          <ControlGroup vertical={isMobile}>
             <InputGroup
               id="text-input"
-              placeholder="*Bairro"
+              placeholder="Bairro"
+              autoComplete="nope"
               value={emmiter.address.district}
-              onChange={(event) => setEmmiter({ address: { district: event.target.value } })}
+              onChange={(event) => setEmmiter({ ...emmiter, address: { district: event.target.value } })}
             />
-            <select id="fromState" value={emmiter.address.state} onChange={(event) => setEmmiter({ address: { state: event.target.value } })}>
+            <Separator />
+            <select id="fromState" value={emmiter.address.state} onChange={(event) => setEmmiter({ ...emmiter, address: { state: event.target.value } })}>
+              <option selected disabled="disabled" placeholder="Estado"></option>
               {states.map((item) => {
                 return (
                   <option key={item.id} value={item.uf}>
@@ -195,9 +209,9 @@ function Invoice() {
           </ControlGroup>
         </FormGroup>
         <FormGroup label="Email/Site" labelFor="text-input">
-          <InputGroup id="text-input" placeholder="Email" name="email" required />
+          <InputGroup id="text-input" placeholder="Email" name="email" autoComplete="nope" />
           <Separator />
-          <InputGroup id="text-input" placeholder="Site" />
+          <InputGroup id="text-input" placeholder="Site" autoComplete="nope" />
         </FormGroup>
         <div id="buttons">
           <Button intent="warning" text="Limpar" onClick={() => handleClean('first')} />
@@ -395,23 +409,26 @@ function Invoice() {
       </SliderWrapper>
       <ContentWrapper>
         <FormWrapper>
-          <Card interactive={false} elevation={Elevation.TWO}>
-            <Tabs id="TabsExample" onChange={(id) => setTabId(id)} selectedTabId={tabId}>
+          <Card id="formCard" interactive={false} elevation={Elevation.TWO}>
+            <Tabs id="TabsExample" selectedTabId={tabId}>
               <Tab id="first" title="Emissor" panel={emmiterForm()} />
-              <Tab id="second" title="Cliente" panel={receiverForm()} />
-              <Tab id="third" title="Ordenado" panel={receiptForm()} />
+              {/* <Tab id="second" title="Cliente" panel={receiverForm()} />
+              <Tab id="third" title="Ordenado" panel={receiptForm()} /> */}
             </Tabs>
           </Card>
         </FormWrapper>
         <PreviewWrapper>
-          <div
+          {/* <div
             style={{
               height: '200px',
               width: '200px',
               backgroundColor: 'blue',
               transform: 'scale(0.4)',
             }}
-          ></div>
+          ></div> */}
+          <div style={{ transform: 'scale(0.5)' }}>
+            <MatModel></MatModel>
+          </div>
         </PreviewWrapper>
       </ContentWrapper>
     </Container>
