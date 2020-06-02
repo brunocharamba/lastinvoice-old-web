@@ -3,6 +3,7 @@ import Slider from 'react-slick'
 import InputMask from 'react-input-mask'
 import { isMobile } from 'react-device-detect'
 import { Button, Card, Elevation, FormGroup, ControlGroup, InputGroup, Tab, Tabs, Position, Popover, Menu, MenuItem } from '@blueprintjs/core'
+
 import correios from '../../services/correios'
 import states from '../../constants/states'
 
@@ -209,9 +210,22 @@ function Invoice() {
           </ControlGroup>
         </FormGroup>
         <FormGroup label="Email/Site" labelFor="text-input">
-          <InputGroup id="text-input" placeholder="Email" name="email" autoComplete="nope" />
+          <InputGroup
+            id="text-input"
+            placeholder="Email"
+            name="email"
+            autoComplete="nope"
+            value={emmiter.email}
+            onChange={(e) => setEmmiter({ ...emmiter, email: e.target.value })}
+          />
           <Separator />
-          <InputGroup id="text-input" placeholder="Site" autoComplete="nope" />
+          <InputGroup
+            id="text-input"
+            placeholder="Site"
+            autoComplete="nope"
+            value={emmiter.site}
+            onChange={(e) => setEmmiter({ ...emmiter, site: e.target.value })}
+          />
         </FormGroup>
         <div id="buttons">
           <Button intent="warning" text="Limpar" onClick={() => handleClean('first')} />
@@ -411,23 +425,15 @@ function Invoice() {
         <FormWrapper>
           <Card id="formCard" interactive={false} elevation={Elevation.TWO}>
             <Tabs id="TabsExample" selectedTabId={tabId}>
-              <Tab id="first" title="Emissor" panel={emmiterForm()} />
-              {/* <Tab id="second" title="Cliente" panel={receiverForm()} />
-              <Tab id="third" title="Ordenado" panel={receiptForm()} /> */}
+              <Tab id="first" title="1. Emissor" panel={emmiterForm()} />
+              <Tab id="second" title="2. Cliente" panel={receiverForm()} />
+              <Tab id="third" title="3. Ordenado" panel={receiptForm()} />
             </Tabs>
           </Card>
         </FormWrapper>
         <PreviewWrapper>
-          {/* <div
-            style={{
-              height: '200px',
-              width: '200px',
-              backgroundColor: 'blue',
-              transform: 'scale(0.4)',
-            }}
-          ></div> */}
-          <div style={{ transform: 'scale(0.5)' }}>
-            <MatModel></MatModel>
+          <div id="wp">
+            <MatModel emmiter={emmiter}></MatModel>
           </div>
         </PreviewWrapper>
       </ContentWrapper>

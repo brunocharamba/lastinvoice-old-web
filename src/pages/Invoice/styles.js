@@ -51,7 +51,7 @@ const ContentWrapper = styled.div`
 
 const FormWrapper = styled.div`
   display: flex;
-  flex: 0.6;
+  flex: 0.5;
   justify-content: center;
   width: 100%;
   margin: 0px;
@@ -74,9 +74,14 @@ const FormWrapper = styled.div`
 
 const PreviewWrapper = styled.div`
   display: flex;
-  flex: 0.4;
+  flex: 0.5;
   justify-content: center;
-  /* background-color: ${colors.carrot}; */
+
+  & #wp {
+    transform: scale(0.65);
+    height: 0;
+    top: 0;
+  }
 `
 
 export { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator }
