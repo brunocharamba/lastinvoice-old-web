@@ -8,7 +8,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 0 0 40px 0;
-  background-color: ${colors.clouds};
 
   & > h2 {
     padding: 0 40px;
@@ -51,10 +50,10 @@ const ContentWrapper = styled.div`
 
 const FormWrapper = styled.div`
   display: flex;
-  flex: 0.5;
+  flex: 0.45;
   justify-content: center;
   width: 100%;
-  margin: 0px;
+  margin: 20px 0px;
   padding: 0px;
 
   & #formCard {
@@ -70,18 +69,64 @@ const FormWrapper = styled.div`
   & *:focus {
     outline: none;
   }
+
+  #type,
+  #date {
+    width: 100%;
+    position: relative;
+    border: 1px solid ${colors.clouds};
+    border-radius: 5px;
+
+    #sel,
+    #text-date {
+      padding: 8px 10px;
+      border: 0;
+      color: ${(props) => props.disabled && colors.silver};
+    }
+  }
+
+  #num-receipt {
+    text-transform: uppercase;
+  }
+
+  #currency {
+    border: 2px solid ${colors.turquoise};
+    padding: 0 10px;
+  }
+
+  #list {
+    margin: 10px 0 0 0;
+    padding: 10px;
+    background-color: ${colors.clouds};
+    border-radius: 5px;
+  }
 `
 
 const PreviewWrapper = styled.div`
   display: flex;
-  flex: 0.5;
+  flex: 0.55;
   justify-content: center;
-
+  margin: 20px 0;
   & #wp {
-    transform: scale(0.65);
+    transform: ${isMobile ? 'scale(0.43)' : 'scale(0.65)'};
     height: 0;
     top: 0;
   }
 `
 
-export { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator }
+const ProductWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px;
+
+  & > span {
+    width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`
+
+export { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator, ProductWrapper }
