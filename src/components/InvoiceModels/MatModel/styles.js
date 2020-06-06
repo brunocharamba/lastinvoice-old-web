@@ -12,7 +12,7 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 1008px;
   width: 720px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   margin: 10px;
 
   & * {
@@ -100,7 +100,7 @@ const Top = styled.div`
 
 const Middle = styled.div`
   display: flex;
-  flex: 0.7;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   background-color: white;
@@ -117,7 +117,6 @@ const Middle = styled.div`
 
 const Bottom = styled.div`
   background-color: ${colors.clouds};
-  height: 20px;
 
   #message {
     text-align: justify;
@@ -133,6 +132,7 @@ const Bottom = styled.div`
     flex-direction: row;
     justify-content: space-between;
     font-size: 11px;
+    height: 50px;
 
     & div {
       display: flex;

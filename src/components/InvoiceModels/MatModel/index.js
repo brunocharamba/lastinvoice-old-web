@@ -30,13 +30,13 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
   const makeAddress = () => {
     let address = ''
     if (isPreview) {
-      address += (emmiter.address.address || '[RUA]') + ', '
-      address += (emmiter.address.number || '[NUMERO]') + ', '
-      address += emmiter.address.district || '[BAIRRO]'
+      address += (emmiter?.address.address || '[RUA]') + ', '
+      address += (emmiter?.address.number || '[NUMERO]') + ', '
+      address += emmiter?.address.district || '[BAIRRO]'
     } else {
-      address += emmiter.address.address ? emmiter.address.address + ', ' : ''
-      address += emmiter.address.number ? emmiter.address.number + ', ' : ''
-      address += emmiter.address.district
+      address += emmiter?.address.address ? emmiter?.address.address + ', ' : ''
+      address += emmiter?.address.number ? emmiter?.address.number + ', ' : ''
+      address += emmiter?.address.district
     }
 
     return address
@@ -51,28 +51,28 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
             LOGO
           </Avatar>
           <div id="logoTitle">
-            <h1>{emmiter.name || (isPreview && '[NOME DA EMPRESA]')}</h1>
-            <h4>{emmiter.site || (isPreview && '[SITE]')}</h4>
+            <h1>{emmiter?.name || (isPreview && '[NOME DA EMPRESA]')}</h1>
+            <h4>{emmiter?.site || (isPreview && '[SITE]')}</h4>
           </div>
         </div>
         <div id="client">
           <div id="period">
             <h1>RECIBO</h1>
-            <h4>{data.number ? '#' + data.number : '[#NUMERO]'}</h4>
+            <h4>{data?.number ? '#' + data?.number : '[#NUMERO]'}</h4>
             <h4>
-              {data.type || (isPreview && '[TIPO]')} | {moment(data.date).format('DD/MM/YYYY') || (isPreview && '[DATA]')}
+              {data?.type || (isPreview && '[TIPO]')} | {moment(data?.date).format('DD/MM/YYYY') || (isPreview && '[DATA]')}
             </h4>
           </div>
           <div id="details">
             <AccountCircleIcon style={{ fontSize: 80 }} />
             <div>
               <h5>
-                {receiver.address.city || (isPreview && '[CIDADE]')} {receiver.address.state || (isPreview && '[UF]')}
+                {receiver?.address.city || (isPreview && '[CIDADE]')} {receiver?.address.state || (isPreview && '[UF]')}
               </h5>
-              <h2>{receiver.name || (isPreview && '[CIDADE]')}</h2>
-              <h5>{receiver.document.number || (isPreview && '[DOCUMENTO]')}</h5>
-              <h5>{receiver.phone || (isPreview && '[TELEFONE]')}</h5>
-              <h5>{receiver.email || (isPreview && '[EMAIL]')}</h5>
+              <h2>{receiver?.name || (isPreview && '[CIDADE]')}</h2>
+              <h5>{receiver?.document.number || (isPreview && '[DOCUMENTO]')}</h5>
+              <h5>{receiver?.phone || (isPreview && '[TELEFONE]')}</h5>
+              <h5>{receiver?.email || (isPreview && '[EMAIL]')}</h5>
             </div>
           </div>
         </div>
@@ -89,8 +89,8 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.products?.length > 0 &&
-                data.products.map((row) => (
+              {data?.products?.length > 0 &&
+                data?.products.map((row) => (
                   <StyledTableRow key={row.name}>
                     <StyledTableCell component="th" scope="row">
                       {row.name}
@@ -100,7 +100,6 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
                     <StyledTableCell align="right">{row.price}</StyledTableCell>
                   </StyledTableRow>
                 ))}
-              }
               <TableRow>
                 <StyledTableCell rowSpan={4} />
                 <StyledTableCell align="right" colSpan={2}>
@@ -108,7 +107,7 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   <CurrencyFormat
-                    value={data.total}
+                    value={data?.total}
                     displayType="text"
                     thousandSeparator="."
                     decimalSeparator=","
@@ -134,9 +133,9 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
         <Separator />
         <div id="info">
           <div>
-            <strong>{emmiter.site || (isPreview && '[SITE]')}</strong>
-            <div>{emmiter.email || (isPreview && '[EMAIL]')}</div>
-            <div>{emmiter.document.number || (isPreview && '[DOCUMENTO]')}</div>
+            <strong>{emmiter?.site || (isPreview && '[SITE]')}</strong>
+            <div>{emmiter?.email || (isPreview && '[EMAIL]')}</div>
+            <div>{emmiter?.document.number || (isPreview && '[DOCUMENTO]')}</div>
           </div>
           <div>
             <div>
@@ -144,9 +143,9 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
               {/* {emmiter.address.address || '[RUA]'}, {emmiter.address.number || '[NUMERO]'}, {emmiter.address.district || '[BAIRRO]'} */}
             </div>
             <div>
-              {emmiter.address.city || '[CIDADE]'}, {emmiter.address.state || '[UF]'}
+              {emmiter?.address.city || '[CIDADE]'}, {emmiter?.address.state || '[UF]'}
             </div>
-            <div>{emmiter.phone || '[PHONE]'}</div>
+            <div>{emmiter?.phone || '[PHONE]'}</div>
           </div>
         </div>
       </Bottom>

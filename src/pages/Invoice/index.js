@@ -4,6 +4,12 @@ import InputMask from 'react-input-mask'
 import { isMobile } from 'react-device-detect'
 import CurrencyFormat from 'react-currency-format'
 
+import ReactToPdf from 'react-to-pdf'
+
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
+import { saveAs } from 'file-saver'
+
 import {
   Button,
   Card,
@@ -37,6 +43,8 @@ import states from '../../constants/states'
 import MatModel from '../../components/InvoiceModels/MatModel'
 
 import { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator, ModelWrapper, ProductWrapper } from './styles'
+
+const ref = React.createRef()
 
 const emmiterBase = {
   name: '',
@@ -98,7 +106,7 @@ const dataBase = {
 }
 
 function Invoice() {
-  const [tabId, setTabId] = useState('first')
+  const [tabId, setTabId] = useState('third')
   const [emmiter, setEmmiter] = useState(emmiterBase)
   const [receiver, setReceiver] = useState(receiverBase)
   const [data, setData] = useState(dataBase)
@@ -137,7 +145,22 @@ function Invoice() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log('teste')
+
+    const input = document.getElementById('pdf-wrapper')
+
+    //
+
+    console.log(input)
+    html2canvas(input, { scrollX: -230, scrollY: -window.scrollY - 100, scale: 1.3 }).then((canvas) => {
+      // const imgData = canvas.toDataURL('image/png')
+      const imgData = canvas.toDataURL()
+
+      console.log(ref)
+
+      const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true })
+      pdf.addImage(imgData, 'PNG', 0, 0)
+      pdf.save('download.pdf')
+    })
   }
 
   const handleCepChange = async (event, tabId) => {
@@ -508,6 +531,7 @@ function Invoice() {
           <Separator />
           <ControlGroup vertical={false}>
             <InputGroup
+              autoComplete="nope"
               id="text-input"
               placeholder="*Quantidade"
               type="number"
@@ -519,6 +543,7 @@ function Invoice() {
               autoComplete="nope"
             />
             <CurrencyFormat
+              autoComplete="nope"
               id="currency"
               thousandSeparator="."
               decimalSeparator=","
@@ -565,6 +590,9 @@ function Invoice() {
             }}
           />
           <Button rightIcon="thumbs-up" intent="success" text="Gerar Recibo" type="submit" />
+          {/* <ReactToPdf targetRef={ref} filename="code-example.pdf" options={{ format: 'a4' }}>
+            {({ toPdf }) => <Button rightIcon="thumbs-up" intent="success" text="Gerar Recibo" onClick={toPdf} />}
+          </ReactToPdf> */}
         </div>
       </form>
     )
@@ -599,9 +627,9 @@ function Invoice() {
             </Tabs>
           </Card>
         </FormWrapper>
-        <PreviewWrapper>
-          <div id="wp">
-            <MatModel emmiter={emmiter} receiver={receiver} data={data} isPreview={true}></MatModel>
+        <PreviewWrapper id="pdf-wrapper">
+          <div id="wp" style={{ height: 'max-content' }}>
+            <MatModel ref={ref} emmiter={emmiter} receiver={receiver} data={data} isPreview={true}></MatModel>
           </div>
         </PreviewWrapper>
       </ContentWrapper>
