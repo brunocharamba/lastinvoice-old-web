@@ -44,7 +44,7 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
 
   const classes = useStyles()
   return (
-    <Container>
+    <Container id="huw">
       <Top>
         <div id="company">
           <Avatar id="logo" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.pg">
@@ -100,7 +100,7 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
                     <StyledTableCell align="right">{row.price}</StyledTableCell>
                   </StyledTableRow>
                 ))}
-              <TableRow>
+              <StyledTableRow>
                 <StyledTableCell rowSpan={4} />
                 <StyledTableCell align="right" colSpan={2}>
                   Subtotal
@@ -116,7 +116,7 @@ function MatModel({ emmiter, receiver, data, isPreview }) {
                     prefix={'R$'}
                   />
                 </StyledTableCell>
-              </TableRow>
+              </StyledTableRow>
             </TableBody>
           </Table>
         </TableContainer>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Slider from 'react-slick'
 import InputMask from 'react-input-mask'
 import { isMobile } from 'react-device-detect'
@@ -42,9 +42,7 @@ import states from '../../constants/states'
 
 import MatModel from '../../components/InvoiceModels/MatModel'
 
-import { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator, ModelWrapper, ProductWrapper } from './styles'
-
-const ref = React.createRef()
+import { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator, ModelWrapper, ProductWrapper, StyledMatModel } from './styles'
 
 const emmiterBase = {
   name: '',
@@ -94,22 +92,24 @@ const receiverBase = {
 const dataBase = {
   type: 'Venda',
   date: new Date(),
-  number: '',
+  number: '123',
   products: [],
   total: 0,
-  formName: '',
-  formCode: '',
-  formCount: '',
-  formPrice: '',
+  formName: 'AA',
+  formCode: '1',
+  formCount: '1',
+  formPrice: 'R$1,00',
   formBasePrice: 0,
   formMessage: '',
 }
 
 function Invoice() {
+  const [toPrint, setToPrint] = useState(false)
   const [tabId, setTabId] = useState('third')
   const [emmiter, setEmmiter] = useState(emmiterBase)
   const [receiver, setReceiver] = useState(receiverBase)
   const [data, setData] = useState(dataBase)
+  const matRef = useRef(null)
 
   const documentEmmiterMenu = (
     <Popover
@@ -145,22 +145,37 @@ function Invoice() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    setToPrint(true)
 
-    const input = document.getElementById('pdf-wrapper')
+    // const input = document.getElementById('pdf-wrapper')
+    const input = document.getElementById('wp')
 
-    //
+    // console.log(matRef)
+
+    const tempHeight = input.offsetHeight
+    const tempTransform = 'scale(0.75)'
+
+    input.style.height = 'max-content'
+    input.style.transform = 'scale(1)'
 
     console.log(input)
-    html2canvas(input, { scrollX: -230, scrollY: -window.scrollY - 100, scale: 1.3 }).then((canvas) => {
+    console.log(input.offsetWidth, input.offsetHeight)
+
+    // html2canvas(input, { scrollX: -window.scrollX - 200, scrollY: -window.scrollY, height: 1008, width: 720 }).then((canvas) => {
+    html2canvas(input, { height: input.offsetHeight, width: input.offsetWidth }).then((canvas) => {
       // const imgData = canvas.toDataURL('image/png')
       const imgData = canvas.toDataURL()
 
-      console.log(ref)
+      saveAs(imgData)
 
-      const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true })
-      pdf.addImage(imgData, 'PNG', 0, 0)
-      pdf.save('download.pdf')
+      // const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true })
+      // pdf.addImage(imgData, 'PNG', 0, 0)
+      // pdf.save('download.pdf')
     })
+
+    input.style.height = tempHeight
+    input.style.transform = tempTransform
+    setToPrint(false)
   }
 
   const handleCepChange = async (event, tabId) => {
@@ -628,8 +643,8 @@ function Invoice() {
           </Card>
         </FormWrapper>
         <PreviewWrapper id="pdf-wrapper">
-          <div id="wp" style={{ height: 'max-content' }}>
-            <MatModel ref={ref} emmiter={emmiter} receiver={receiver} data={data} isPreview={true}></MatModel>
+          <div id="wp">
+            <StyledMatModel ref={matRef} emmiter={emmiter} receiver={receiver} data={data} isPreview={true}></StyledMatModel>
           </div>
         </PreviewWrapper>
       </ContentWrapper>

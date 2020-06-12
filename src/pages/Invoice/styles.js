@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
+import MatModel from '../../components/InvoiceModels/MatModel'
+
 import { colors } from '../../styles'
 
 const Container = styled.div`
@@ -107,9 +109,11 @@ const PreviewWrapper = styled.div`
   flex: 0.55;
   justify-content: center;
   margin: 20px 0;
+
   & #wp {
-    transform: ${isMobile ? 'scale(0.43)' : 'scale(0.65)'};
-    height: 0;
+    /* transform: ${isMobile ? 'scale(0.43)' : 'scale(0.75)'}; */
+    transform: ${(props) => (isMobile ? 'scale(0.43)' : props.toPrint ? 'scale(1)' : 'scale(0.75)')};
+    height: ${(props) => (props.toPrint ? 'max-content' : 0)};
     top: 0;
   }
 `
@@ -129,4 +133,8 @@ const ProductWrapper = styled.div`
   }
 `
 
-export { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator, ProductWrapper }
+const StyledMatModel = styled(MatModel)`
+  border: 2px solid black;
+`
+
+export { Container, SliderWrapper, ContentWrapper, FormWrapper, PreviewWrapper, Separator, ProductWrapper, StyledMatModel }

@@ -12,7 +12,7 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 1008px;
   width: 720px;
-  /* border: 1px solid black; */
+  max-width: 720px;
   margin: 10px;
 
   & * {
@@ -154,9 +154,13 @@ const StyledTableCell = withStyles((theme) => ({
     border: 0,
   },
   head: {
-    backgroundColor: colors.midnightBlue,
-    color: theme.palette.common.white,
+    // backgroundColor: colors.midnightBlue,
+    // color: theme.palette.common.white,
+
+    color: colors.midnightBlue,
     border: 0,
+    fontWeight: 600,
+    fontSize: 18,
   },
   body: {
     fontSize: 14,
@@ -168,6 +172,7 @@ const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
+      border: 0,
     },
   },
 }))(TableRow)
