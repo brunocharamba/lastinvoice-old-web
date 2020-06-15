@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { Input } from 'antd'
+
 import { colors } from '../../../styles'
 
 const Container = styled.div`
@@ -56,14 +58,20 @@ const Information = styled.div`
     color: ${colors.clouds};
   }
 
-  #company {
+  #client-title {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 20px;
+    margin: 20px 0 0 0;
+    color: ${colors.clouds};
+  }
+
+  #company,
+  #client {
     display: flex;
-    flex: 1;
     flex-direction: column;
     width: 100%;
-    align-items: flex-end;
-    justify-content: flex-start;
-    margin: 20px 0 0 0;
+    align-items: center;
 
     h5 {
       color: ${colors.clouds};
@@ -90,8 +98,12 @@ const Data = styled.div`
 const HorizontalSeparator = styled.div`
   height: 2px;
   width: 50%;
-  margin: 20px 0;
+  margin: 40px 0;
   background-color: ${colors.clouds};
 `
 
-export { Container, Information, Data, Fill, FillD, HorizontalSeparator }
+const StyledInput = styled(Input)`
+  background-color: ${colors.transparent};
+`
+
+export { Container, Information, Data, Fill, FillD, HorizontalSeparator, StyledInput }

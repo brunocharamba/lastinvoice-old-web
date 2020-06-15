@@ -1,14 +1,15 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import ReactToPdf from 'react-to-pdf'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { saveAs } from 'file-saver'
 
+import Header from '../../components/Header'
 import MatModel from '../../components/InvoiceModels/MatModel'
 import HalfModel from '../../components/InvoiceModels/HalfModel'
 
-import { Container } from './styles'
+import { Container, Menu } from './styles'
 
 function NewInvoice() {
   const myRef = useRef()
@@ -35,6 +36,7 @@ function NewInvoice() {
 
   return (
     <Container>
+      <Menu>aaa</Menu>
       <div ref={myRef}>
         <HalfModel></HalfModel>
       </div>

@@ -11,4 +11,9 @@ const ModelWrapper = styled.div`
   border: 1px solid black;
 `
 
-export { Container, ModelWrapper }
+const Menu = styled.div`
+  position: absolute;
+  top: 0;
+`
+
+export { Container, ModelWrapper, Menu }

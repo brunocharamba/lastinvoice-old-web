@@ -1,4 +1,7 @@
 const colors = {
+  // general
+  transparent: 'rgba(255, 255, 255, 0.0)',
+
   // flat colors ui
   turquoise: '#1abc9c',
   greenSea: '#16a085',

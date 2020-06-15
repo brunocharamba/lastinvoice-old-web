@@ -1,8 +1,11 @@
 import React from 'react'
+import { Provider } from 'react-redux'
+
 import styled, { createGlobalStyle } from 'styled-components'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
 
+import Store from './store'
 import Routes from './routes'
 import Header from './components/Header'
 
@@ -42,19 +45,21 @@ const Container = styled.div`
   }
 
   & > :nth-child(1) {
-    height: 80px !important;
+    /* height: 80px !important; */
   }
 `
 
 function App() {
   return (
-    <Container>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <GlobalStyle />
-        <Header></Header>
-        <Routes></Routes>
-      </MuiPickersUtilsProvider>
-    </Container>
+    <Provider store={Store}>
+      <Container>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <GlobalStyle />
+          {/* <Header></Header> */}
+          <Routes></Routes>
+        </MuiPickersUtilsProvider>
+      </Container>
+    </Provider>
   )
 }
 
