@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { withStyles } from '@material-ui/core/styles'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
+import ContentEditable from 'react-contenteditable'
 
 import { colors } from '../../../styles'
 
@@ -84,6 +85,11 @@ const Top = styled.div`
       h5 {
         color: ${colors.clouds};
       }
+
+      #add {
+        display: flex;
+        flex-direction: row;
+      }
     }
 
     #period {
@@ -142,6 +148,12 @@ const Bottom = styled.div`
     & > :nth-child(2) {
       align-items: flex-end;
     }
+
+    #address,
+    #citystate {
+      display: flex;
+      flex-direction: row;
+    }
   }
 `
 
@@ -177,4 +189,48 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow)
 
-export { Container, Top, Middle, Bottom, Separator, StyledTableCell, StyledTableRow }
+const StyledContentEditable = styled(ContentEditable)`
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: ${colors.asbestos};
+    border-radius: 5px;
+    border: 1px solid ${colors.asbestos};
+    margin: -1px;
+  }
+
+  &:focus {
+    background-color: ${colors.asbestos};
+    border-radius: 5px;
+    border: 1px solid ${colors.asbestos} !important;
+    margin: -1px;
+    outline-width: 0;
+  }
+
+  &:empty:before {
+    content: attr(placeholder);
+  }
+`
+
+const MyTable = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 300px;
+`
+
+const MyTableHeaderRow = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+`
+
+const MyTableRow = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+`
+
+const MyTableCell = styled.div``
+
+export { Container, Top, Middle, Bottom, Separator, StyledTableCell, StyledTableRow, StyledContentEditable, MyTable, MyTableHeaderRow, MyTableRow, MyTableCell }

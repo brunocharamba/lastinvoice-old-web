@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Input } from 'antd'
+import ContentEditable from 'react-contenteditable'
 
 import { colors } from '../../../styles'
 
@@ -73,7 +74,8 @@ const Information = styled.div`
     width: 100%;
     align-items: center;
 
-    h5 {
+    h5,
+    p {
       color: ${colors.clouds};
     }
   }
@@ -106,4 +108,31 @@ const StyledInput = styled(Input)`
   background-color: ${colors.transparent};
 `
 
-export { Container, Information, Data, Fill, FillD, HorizontalSeparator, StyledInput }
+const StyledContentEditable = styled(ContentEditable)`
+  width: 100%;
+  padding: 5px;
+  color: ${colors.clouds};
+  box-sizing: border-box;
+  font-size: 12px;
+
+  &:hover {
+    background-color: ${colors.asbestos};
+    border-radius: 5px;
+    border: 1px solid ${colors.asbestos};
+    margin: -1px;
+  }
+
+  &:focus {
+    background-color: ${colors.asbestos};
+    border-radius: 5px;
+    border: 1px solid ${colors.asbestos} !important;
+    margin: -1px;
+    outline-width: 0;
+  }
+
+  &:empty:before {
+    content: attr(placeholder);
+  }
+`
+
+export { Container, Information, Data, Fill, FillD, HorizontalSeparator, StyledInput, StyledContentEditable }

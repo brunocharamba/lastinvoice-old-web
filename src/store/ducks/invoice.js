@@ -9,7 +9,7 @@ export const Types = {
 // REDUCER
 const INITIAL_STATE = {
   emmiter: {
-    name: '',
+    name: null,
     phone: '',
     cellphone: '',
     document: {
@@ -29,6 +29,8 @@ const INITIAL_STATE = {
       district: '',
     },
     logo: '',
+    message:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam imperdiet, leo nec eleifend posuere, sem tortor imperdiet turpis, eget mollis sapien nulla at mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
   },
   receiver: {
     name: '',
@@ -53,8 +55,8 @@ const INITIAL_STATE = {
   },
   data: {
     type: 'Venda',
-    date: new Date(),
-    number: '123',
+    date: new Date().toLocaleDateString(),
+    number: '',
     products: [],
     total: 0,
     formName: 'AA',

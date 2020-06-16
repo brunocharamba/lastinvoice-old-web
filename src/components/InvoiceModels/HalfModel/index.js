@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Select, Input } from 'antd'
 import { Creators as Actions } from '../../../store/ducks/invoice'
 
 import 'antd/dist/antd.css'
-import { Container, Information, Fill, FillD, Data, HorizontalSeparator, StyledInput } from './styles'
+import { Container, Information, Fill, FillD, Data, HorizontalSeparator, StyledInput, StyledContentEditable } from './styles'
 
 function HalfModel() {
   const emmiter = useSelector((state) => state.invoice.emmiter)
@@ -12,23 +11,9 @@ function HalfModel() {
   const data = useSelector((state) => state.invoice.data)
   const dispatch = useDispatch()
 
-  const { Option } = Select
-
-  // <Container>
-  //   <Select
-  //     showSearch
-  //     style={{ width: 200 }}
-  //     placeholder="Select a person"
-  //     optionFilterProp="children"
-  //     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-  //   >
-  //     <Option value="jack">Jack</Option>
-  //     <Option value="lucy">Lucy</Option>
-  //     <Option value="tom">Tom</Option>
-  //   </Select>
-  // </Container>
-
-  console.log(emmiter)
+  const handleEmailChange = (event) => {
+    // emailRef.current = event.target.value
+  }
 
   return (
     <Container>
@@ -36,22 +21,33 @@ function HalfModel() {
         <div id="logo">LOGO</div>
         <div id="title">{emmiter.name}</div>
         <div id="company">
-          <h5>http://www.joanajuliao.com.br</h5>
-          <StyledInput placeholder="Basic usage" />
-
-          <h5>info.joanajuliao@gmail.com</h5>
+          <h5>http://www.google.com</h5>
+          {/* <p>email</p> */}
+          <StyledContentEditable
+            // html={emmiter.email || 'Type your email...'}
+            html={emmiter.email}
+            disabled={false}
+            onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, email: event.target.value }))}
+            placeholder={'Hello, World!'}
+          />
         </div>
-        <button onClick={() => dispatch(Actions.setEmmiter({ ...emmiter, name: 'Joana Julião' }))}>AAA</button>
-        <button onClick={() => dispatch(Actions.setEmmiter({ ...emmiter, email: 'email@eamil.com' }))}>BBB</button>
+        <button onClick={() => dispatch(Actions.setEmmiter({ ...emmiter, name: 'Test Name' }))}>AAA</button>
+        <button
+          onClick={() => {
+            console.log(emmiter.email)
+          }}
+        >
+          BBB
+        </button>
         <HorizontalSeparator />
-        <div id="photo">FOTO</div>
-        <div id="client-title">Sindel dos Santos Medeiros Charamba</div>
+        <div id="photo">PHOTO</div>
+        <div id="client-title">Full Name</div>
         <div id="client">
-          <a href="http://www.joanajuliao.com.br" target="_blank" rel="noopener noreferrer">
-            <h5>http://www.joanajuliao.com.br</h5>
+          <a href="http://www.google.com" target="_blank" rel="noopener noreferrer">
+            <h5>http://www.google.com</h5>
           </a>
           <a href="mailto:teste">
-            <h5>info.joanajuliao@gmail.com</h5>
+            <h5>test@gmail.com</h5>
           </a>
         </div>
       </Information>

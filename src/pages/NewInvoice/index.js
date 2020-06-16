@@ -6,7 +6,7 @@ import jsPDF from 'jspdf'
 import { saveAs } from 'file-saver'
 
 import Header from '../../components/Header'
-import MatModel from '../../components/InvoiceModels/MatModel'
+import NewMatModel from '../../components/InvoiceModels/NewMatModel'
 import HalfModel from '../../components/InvoiceModels/HalfModel'
 
 import { Container, Menu } from './styles'
@@ -16,7 +16,6 @@ function NewInvoice() {
 
   const handleSave = (e) => {
     e.preventDefault()
-
     // const input = document.getElementById('pdf-wrapper')
     console.log(myRef.current.offsetHeight, myRef.current.children[0], -window.scrollX)
     const input = myRef.current.children[0]
@@ -38,7 +37,8 @@ function NewInvoice() {
     <Container>
       <Menu>aaa</Menu>
       <div ref={myRef}>
-        <HalfModel></HalfModel>
+        {/* <HalfModel></HalfModel> */}
+        <NewMatModel></NewMatModel>
       </div>
       <button onClick={(e) => handleSave(e)}>Gerar</button>
     </Container>
