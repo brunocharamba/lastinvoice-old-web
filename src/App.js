@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
-    padding: 0 0 20px 0; 
+    /* padding: 0 0 20px 0;  */
     background-color: ${colors.clouds};
 
   }

@@ -119,6 +119,21 @@ const Middle = styled.div`
     align-items: center;
     padding: 20px;
   }
+
+  #currency {
+    max-width: 100px;
+    text-align: right;
+    padding: 2px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+
+    &:hover {
+      background-color: ${colors.asbestos};
+      border-radius: 5px;
+      border: 1px solid ${colors.asbestos};
+      margin: -1px;
+    }
+  }
 `
 
 const Bottom = styled.div`
@@ -172,7 +187,7 @@ const StyledTableCell = withStyles((theme) => ({
     color: colors.midnightBlue,
     border: 0,
     fontWeight: 600,
-    fontSize: 18,
+    fontSize: 16,
   },
   body: {
     fontSize: 14,
@@ -191,6 +206,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 const StyledContentEditable = styled(ContentEditable)`
   box-sizing: border-box;
+  padding: 2px;
 
   &:hover {
     background-color: ${colors.asbestos};
@@ -212,25 +228,4 @@ const StyledContentEditable = styled(ContentEditable)`
   }
 `
 
-const MyTable = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 300px;
-`
-
-const MyTableHeaderRow = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-`
-
-const MyTableRow = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-`
-
-const MyTableCell = styled.div``
-
-export { Container, Top, Middle, Bottom, Separator, StyledTableCell, StyledTableRow, StyledContentEditable, MyTable, MyTableHeaderRow, MyTableRow, MyTableCell }
+export { Container, Top, Middle, Bottom, Separator, StyledTableCell, StyledTableRow, StyledContentEditable }

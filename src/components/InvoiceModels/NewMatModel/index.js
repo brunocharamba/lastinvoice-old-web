@@ -31,9 +31,11 @@ import {
 } from './styles'
 
 const useStyles = makeStyles({
-  table: {
-    minWidth: 700,
-  },
+  table: { minWidth: 700 },
+  desc: { width: 290, maxWidth: 290 },
+  code: { width: 120, maxWidth: 120 },
+  count: { width: 50, maxWidth: 50 },
+  price: { width: 100, maxWidth: 100 },
 })
 
 function createData(name, code, count, price) {
@@ -53,25 +55,52 @@ function NewMatModel({ isPreview }) {
     }, 0)
   }
 
-  const makeAddress = () => {
-    let address = ''
-    if (isPreview) {
-      address += (emmiter?.address.address || '[RUA]') + ', '
-      address += (emmiter?.address.number || '[NUMERO]') + ', '
-      address += emmiter?.address.district || '[BAIRRO]'
-    } else {
-      address += emmiter?.address.address ? emmiter?.address.address + ', ' : ''
-      address += emmiter?.address.number ? emmiter?.address.number + ', ' : ''
-      address += emmiter?.address.district
+  const handleAdd = () => {
+    const now = new Date()
+
+    let prod = {
+      id: moment(now).format('YYMMDD') + now.getUTCHours() + now.getUTCMinutes() + now.getUTCSeconds() + now.getUTCMilliseconds(),
+      name: '',
+      code: '',
+      count: '1',
+      price: 0,
+      basePrice: 0,
+      formattedBasePrice: 'R$0,00',
     }
 
-    return address
+    let prods = data.products
+    prods.push(prod)
+
+    const newTotal = prods.reduce((sum, { basePrice, count }) => sum + basePrice * count, 0)
+    dispatch(Actions.setData({ ...data, total: newTotal, products: prods }))
+  }
+
+  const handleEdit = (id, field, value) => {
+    var _products = [...data.products]
+    var index = _products.findIndex((p) => p.id === id)
+
+    console.log(id, field, value)
+
+    _products[index] = { ..._products[index], [field]: value }
+    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0)
+
+    dispatch(Actions.setData({ ...data, total: newTotal, products: _products }))
+  }
+
+  const handleEditPrice = (id, values) => {
+    var _products = [...data.products]
+    var index = _products.findIndex((p) => p.id === id)
+
+    _products[index] = { ..._products[index], formattedBasePrice: values.formattedValue, price: parseFloat(values.value) }
+    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0)
+
+    dispatch(Actions.setData({ ...data, total: newTotal, products: _products }))
   }
 
   const classes = useStyles()
   return (
     <Container id="huw">
-      <button onClick={() => console.log(emmiter, receiver, data)}>Test</button>
+      <button onClick={() => console.log(data)}>Test</button>
       <Top>
         <div id="company">
           <Avatar id="logo" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.pg">
@@ -99,7 +128,6 @@ function NewMatModel({ isPreview }) {
         <div id="client">
           <div id="period">
             <h1>RECIBO</h1>
-            {/* <h4>{data?.number ? '#' + data?.number : '[#NUMERO]'}</h4> */}
             <StyledContentEditable
               html={data.number && '#' + data.number}
               placeholder={'#000000'}
@@ -183,41 +211,84 @@ function NewMatModel({ isPreview }) {
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>Descrição</StyledTableCell>
-                <StyledTableCell align="right">Código</StyledTableCell>
-                <StyledTableCell align="right">Quantidade</StyledTableCell>
-                <StyledTableCell align="right">Valor</StyledTableCell>
+                <StyledTableCell className={classes.desc}>Descrição</StyledTableCell>
+                <StyledTableCell className={classes.code} align="right">
+                  Código
+                </StyledTableCell>
+                <StyledTableCell className={classes.count} align="right">
+                  Qtd.
+                </StyledTableCell>
+                <StyledTableCell className={classes.price} align="right">
+                  Valor
+                </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data?.products?.length > 0 &&
                 data?.products.map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.name}
+                  <StyledTableRow key={row.id}>
+                    <StyledTableCell className={classes.desc} component="th" scope="row">
+                      <StyledContentEditable
+                        html={row.name}
+                        placeholder={'[PRODUTO]'}
+                        tagName="strong"
+                        disabled={false}
+                        onChange={(event) => handleEdit(row.id, 'name', event.target.value)}
+                        onFocus={() => handleFocus()}
+                      />
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.code}</StyledTableCell>
-                    <StyledTableCell align="right">{row.count}</StyledTableCell>
-                    <StyledTableCell align="right">{row.price}</StyledTableCell>
+                    <StyledTableCell className={classes.code} align="right">
+                      <StyledContentEditable
+                        html={row.code}
+                        placeholder={'[CÓDIGO]'}
+                        tagName="strong"
+                        disabled={false}
+                        onChange={(event) => handleEdit(row.id, 'code', event.target.value)}
+                        onFocus={() => handleFocus()}
+                      />
+                    </StyledTableCell>
+                    <StyledTableCell className={classes.count} align="right">
+                      <StyledContentEditable
+                        html={row.count}
+                        placeholder={'[QTD]'}
+                        tagName="strong"
+                        disabled={false}
+                        onChange={(event) => handleEdit(row.id, 'count', event.target.value.replace(/\D/g, ''))}
+                        onFocus={() => handleFocus()}
+                      />
+                    </StyledTableCell>
+                    {/* <StyledTableCell align="right">
+                      <StyledContentEditable
+                        html={row.price}
+                        placeholder={'[VALOR]'}
+                        tagName="strong"
+                        disabled={false}
+                        onChange={(event) => handleEdit(row.id, 'price', event.target.value)}
+                        onFocus={() => handleFocus()}
+                      />
+                    </StyledTableCell> */}
+                    <StyledTableCell className={classes.price} align="right">
+                      <CurrencyFormat
+                        autoComplete="nope"
+                        id="currency"
+                        thousandSeparator="."
+                        decimalSeparator=","
+                        decimalScale={2}
+                        fixedDecimalScale={true}
+                        prefix={'R$'}
+                        value={row.formattedBasePrice}
+                        onValueChange={(values) => handleEditPrice(row.id, values)}
+                        // onValueChange={(values) => setData({ ...data, formPrice: values.formattedValue, formBasePrice: parseFloat(values.value) })}
+                        autoComplete="nope"
+                        onFocus={() => handleFocus()}
+                      />
+                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
-              <StyledTableRow key="taa">
-                <StyledTableCell component="th" scope="row">
-                  <StyledContentEditable
-                    html={emmiter.name}
-                    placeholder={'[PRODUTO]'}
-                    tagName="strong"
-                    disabled={false}
-                    onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, name: event.target.value }))}
-                    onFocus={() => handleFocus()}
-                  />
-                </StyledTableCell>
-                <StyledTableCell align="right"></StyledTableCell>
-                <StyledTableCell align="right"></StyledTableCell>
-                <StyledTableCell align="right"></StyledTableCell>
-              </StyledTableRow>
               <StyledTableRow>
-                <StyledTableCell rowSpan={4}></StyledTableCell>
+                <StyledTableCell rowSpan={4}>
+                  <a onClick={() => handleAdd()}>Adicionar</a>
+                </StyledTableCell>
                 <StyledTableCell align="right" colSpan={2}>
                   Subtotal
                 </StyledTableCell>

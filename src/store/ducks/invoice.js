@@ -59,12 +59,6 @@ const INITIAL_STATE = {
     number: '',
     products: [],
     total: 0,
-    formName: 'AA',
-    formCode: '1',
-    formCount: '1',
-    formPrice: 'R$1,00',
-    formBasePrice: 0,
-    formMessage: '',
   },
 }
 
