@@ -100,7 +100,6 @@ function NewMatModel({ isPreview }) {
   const classes = useStyles()
   return (
     <Container id="huw">
-      <button onClick={() => console.log(data)}>Test</button>
       <Top>
         <div id="company">
           <Avatar id="logo" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.pg">

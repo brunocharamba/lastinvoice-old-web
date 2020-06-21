@@ -15,6 +15,7 @@ const Container = styled.div`
   width: 720px;
   max-width: 720px;
   margin: 10px;
+  border: 1px solid black;
 
   & * {
     /* font-family: 'Julius Sans One', sans-serif !important; */

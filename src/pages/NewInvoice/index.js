@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react'
+import { FaFileAlt, FaRegCreditCard, FaBriefcase, FaBars } from 'react-icons/fa'
 
 import ReactToPdf from 'react-to-pdf'
 import html2canvas from 'html2canvas'
@@ -9,7 +10,7 @@ import Header from '../../components/Header'
 import NewMatModel from '../../components/InvoiceModels/NewMatModel'
 import HalfModel from '../../components/InvoiceModels/HalfModel'
 
-import { Container, Menu } from './styles'
+import { Container, Menu, Button } from './styles'
 
 function NewInvoice() {
   const myRef = useRef()
@@ -25,19 +26,23 @@ function NewInvoice() {
       // const imgData = canvas.toDataURL('image/png')
       const imgData = canvas.toDataURL()
 
-      saveAs(imgData)
+      // saveAs(imgData)
 
-      // const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true })
-      // pdf.addImage(imgData, 'PNG', 0, 0)
-      // pdf.save('download.pdf')
+      const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true })
+      pdf.addImage(imgData, 'PNG', 20, 20, 160, 200)
+      pdf.save('download.pdf')
     })
   }
 
   return (
     <Container>
-      <Menu>aaa</Menu>
-      <div ref={myRef}>
-        {/* <HalfModel></HalfModel> */}
+      <Menu>
+        <Button onClick={() => alert('test')}>
+          <FaFileAlt></FaFileAlt> MODELO
+        </Button>
+        <Button onClick={() => alert('test')}>DOWNLOAD</Button>
+      </Menu>
+      <div id="print-wrapper" ref={myRef}>
         <NewMatModel></NewMatModel>
       </div>
       <button onClick={(e) => handleSave(e)}>Gerar</button>
