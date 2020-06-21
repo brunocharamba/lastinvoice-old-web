@@ -14,6 +14,8 @@ import '@blueprintjs/core/lib/css/blueprint.css'
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+
   body, h1, h2, h3, h4, h5 {
     font-family: 'Montserrat', sans-serif;
   }

@@ -1,70 +1,83 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FaFileAlt, FaRegCreditCard, FaBriefcase, FaBars } from 'react-icons/fa'
-import { Drawer } from 'antd'
-
 import { isMobile } from 'react-device-detect'
 
-import { Container, Background, Wrapper, Top, Middle, Widgets, WidgetRow, Widget } from './styles'
+import { Container, Background, Wrapper, Top, Middle, Announcement, Widgets, WidgetRow, Widget, StyledDrawer } from './styles'
 import { colors } from '../../styles'
 
 function Landing() {
   const [visible, setVisible] = useState(false)
+  const history = useHistory()
 
   const renderMenu = () => {
     return !isMobile ? (
       <div>
-        <a>
-          <h2>planos</h2>
-        </a>
-        <a>
-          <h2>ajuda</h2>
-        </a>
-        <h2>
+        <h3>
+          <a>planos</a>
+        </h3>
+        <h3>
+          <a>ajuda</a>
+        </h3>
+        <h3>
           <a id="signup">registrar</a>
-        </h2>
-        <h2>
+        </h3>
+        <h3>
           <a id="login">login</a>
-        </h2>
+        </h3>
       </div>
     ) : (
       <div>
         <FaBars size={25} color={colors.clouds} onClick={() => setVisible(true)} />
-        <Drawer title="Basic Drawer" placement="right" closable={false} onClose={() => setVisible(false)} visible={visible} key="right">
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Drawer>
+        <StyledDrawer placement="right" closable={true} onClose={() => setVisible(false)} visible={visible} key="right">
+          <div>
+            <h2>
+              <a>planos</a>
+            </h2>
+            <h2>
+              <a>ajuda</a>
+            </h2>
+            <h2>
+              <a id="signup">registrar</a>
+            </h2>
+            <h2>
+              <a id="login">login</a>
+            </h2>
+          </div>
+        </StyledDrawer>
       </div>
     )
   }
 
   return (
     <Container>
+      <Background />
       <Wrapper>
         <Top>
           <h1>SEURECIBO</h1>
           {renderMenu()}
         </Top>
         <Middle>
-          <h1>Meio</h1>
+          <h1>Emita e imprima seus recibos aqui, gratuitamente!</h1>
+          <h3>Compra e venda, orçamentos e outros modelos disponíveis</h3>
         </Middle>
         <Widgets>
           <WidgetRow>
-            <Widget color={colors.nephritis}>
+            <Widget color={colors.nephritis} onClick={() => history.push('/invoice')}>
               <FaFileAlt size={100} />
               <div>
                 <h1>Recibo</h1>
-                <span>simples</span>
+                <span>compra e venda</span>
               </div>
             </Widget>
             <Widget color={colors.belizeHole}>
               <FaRegCreditCard size={100} />
               <div>
-                <h1>Nota</h1>
-                <span>promissória</span>
+                <h1>Recibo</h1>
+                <span>aluguel</span>
               </div>
             </Widget>
-            <Widget color={colors.belizeHole}>
+            <Widget color={colors.orange}>
               <FaRegCreditCard size={100} />
               <div>
                 <h1>Nota</h1>
@@ -72,6 +85,7 @@ function Landing() {
               </div>
             </Widget>
           </WidgetRow>
+
           <WidgetRow>
             <Widget color={colors.amethyst}>
               <FaBriefcase size={100} />
@@ -85,10 +99,17 @@ function Landing() {
               <h2>Recibo</h2>
               <h3>EM BREVE</h3>
             </Widget>
+            <Widget soon color={colors.asbestos}>
+              <FaFileAlt size={100}></FaFileAlt>
+              <h2>Recibo</h2>
+              <h3>EM BREVE</h3>
+            </Widget>
           </WidgetRow>
         </Widgets>
-        <Background />
       </Wrapper>
+      <Announcement>
+        <div>Anuncio</div>
+      </Announcement>
     </Container>
   )
 }

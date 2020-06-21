@@ -1,18 +1,23 @@
 import styled from 'styled-components'
+import { Drawer } from 'antd'
+import { isMobile } from 'react-device-detect'
+
 import { colors } from '../../styles'
 import back from '../../assets/images/back1.jpg'
 
 const Container = styled.div`
-  height: 100vh;
+  height: 100%;
 `
 
 const Background = styled.div`
   position: absolute;
-  height: 100%;
+  height: ${isMobile ? 'calc(100rem - 200px)' : '100%'};
+  /* height: 100%; */
   width: 100%;
   z-index: -99;
   background: url(${back}) center center no-repeat;
   background-size: cover;
+  background-repeat: repeat-y;
   z-index: 1;
   &:before {
     z-index: -99;
@@ -22,17 +27,18 @@ const Background = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: linear-gradient(to bottom, #000, ${colors.belizeHole});
+    background-image: linear-gradient(to bottom, #000, ${colors.peterRiver});
     opacity: 0.7;
   }
 `
 
 const Wrapper = styled.div`
+  position: relative;
   z-index: 20;
   display: flex;
   flex: 1;
   flex-direction: column;
-  height: 100%;
+  /* height: 100%; */
   align-items: center;
   justify-content: flex-start;
 `
@@ -64,7 +70,8 @@ const Top = styled.div`
     justify-content: flex-end;
     margin: 5px 0 0 0;
 
-    & h2 {
+    & h2,
+    & h3 {
       margin: 0 0 0 40px;
       color: ${colors.clouds};
     }
@@ -77,12 +84,42 @@ const Top = styled.div`
   }
 `
 
-const Middle = styled.div``
+const Middle = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  z-index: 200;
+  height: 200px;
+
+  & * {
+    color: ${colors.clouds};
+  }
+
+  & h3 {
+    margin: -10px 0 0 0;
+  }
+`
+
+const Announcement = styled.div`
+  height: 100px;
+  width: 100%;
+  background-color: ${colors.midnightBlue};
+  z-index: 200;
+  position: ${isMobile ? 'relative' : 'absolute'};
+  bottom: 0;
+  & * {
+    color: ${colors.clouds};
+  }
+`
 
 const Widgets = styled.div`
+  height: 100%;
   z-index: 100;
   display: flex;
-  flex: 0.5;
+  padding: 20px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -95,6 +132,7 @@ const WidgetRow = styled.div`
 `
 
 const Widget = styled.div`
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -115,7 +153,8 @@ const Widget = styled.div`
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    transform: scale(1.025);
+    transform: ${(props) => !props.soon && 'scale(1.035)'};
+    cursor: ${(props) => !props.soon && 'pointer'};
   }
 
   & > div {
@@ -154,10 +193,24 @@ const Widget = styled.div`
     text-transform: uppercase;
     margin: 0 0 0 -10px;
     padding: 10px 0;
-    width: 250px;
+    width: 100%;
     color: ${colors.clouds};
     background-color: ${colors.alizarin};
   }
 `
 
-export { Container, Background, Wrapper, Top, Middle, Widgets, WidgetRow, Widget }
+const StyledDrawer = styled(Drawer)`
+  & * {
+    color: ${colors.clouds};
+  }
+  .ant-drawer-body,
+  .ant-drawer-header {
+    background-color: ${colors.wetAsphalt};
+  }
+
+  .ant-drawer-close {
+    margin: 12px 0 0 0;
+  }
+`
+
+export { Container, Background, Wrapper, Top, Middle, Announcement, Widgets, WidgetRow, Widget, StyledDrawer }

@@ -7,7 +7,7 @@ import ContentEditable from 'react-contenteditable'
 import { colors } from '../../../styles'
 
 const Container = styled.div`
-  @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+  /* @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap'); */
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -17,7 +17,8 @@ const Container = styled.div`
   margin: 10px;
 
   & * {
-    font-family: 'Julius Sans One', sans-serif !important;
+    /* font-family: 'Julius Sans One', sans-serif !important; */
+    font-family: 'Montserrat', sans-serif;
   }
 
   h1,
