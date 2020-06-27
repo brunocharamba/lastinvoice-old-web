@@ -14,6 +14,7 @@ const Container = styled.div`
   min-height: 1008px;
   width: 720px;
   max-width: 720px;
+
   margin: 10px;
   border: 1px solid black;
 

@@ -192,7 +192,6 @@ function NewMatModel({ isPreview }) {
                 onChange={(event) => dispatch(Actions.setReceiver({ ...receiver, phone: event.target.value }))}
                 onFocus={() => handleFocus()}
               />
-              {/* <h5>{receiver?.email || (isPreview && '[EMAIL]')}</h5> */}
               <StyledContentEditable
                 html={receiver.email}
                 placeholder={'[EMAIL]'}
@@ -256,16 +255,7 @@ function NewMatModel({ isPreview }) {
                         onFocus={() => handleFocus()}
                       />
                     </StyledTableCell>
-                    {/* <StyledTableCell align="right">
-                      <StyledContentEditable
-                        html={row.price}
-                        placeholder={'[VALOR]'}
-                        tagName="strong"
-                        disabled={false}
-                        onChange={(event) => handleEdit(row.id, 'price', event.target.value)}
-                        onFocus={() => handleFocus()}
-                      />
-                    </StyledTableCell> */}
+
                     <StyledTableCell className={classes.price} align="right">
                       <CurrencyFormat
                         autoComplete="nope"

@@ -27,7 +27,7 @@ const Background = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: linear-gradient(to bottom, #000, ${colors.peterRiver});
+    background-image: linear-gradient(to bottom, #000, ${colors.wetAsphalt});
     opacity: 0.7;
   }
 `
@@ -60,6 +60,7 @@ const Top = styled.div`
   }
 
   & h1 {
+    margin: 0;
     color: ${colors.clouds};
   }
 
@@ -80,6 +81,11 @@ const Top = styled.div`
     #login {
       padding: 10px;
       border: 1px solid ${colors.clouds};
+      transition: 0.25s;
+
+      &:hover {
+        background-color: ${colors.lighterTransparent};
+      }
     }
   }
 `
@@ -104,14 +110,26 @@ const Middle = styled.div`
 `
 
 const Announcement = styled.div`
-  height: 100px;
+  display: flex;
+  flex-direction: ${!isMobile ? 'row' : 'column'};
+  justify-content: center;
+  align-items: center;
+  height: 50px;
   width: 100%;
-  background-color: ${colors.midnightBlue};
   z-index: 200;
   position: ${isMobile ? 'relative' : 'absolute'};
   bottom: 0;
+
   & * {
     color: ${colors.clouds};
+  }
+
+  & > div {
+    margin: ${!isMobile ? '0 20px' : '1px 0'};
+  }
+
+  #networks a {
+    margin: 0 5px;
   }
 `
 
@@ -205,7 +223,7 @@ const StyledDrawer = styled(Drawer)`
   }
   .ant-drawer-body,
   .ant-drawer-header {
-    background-color: ${colors.wetAsphalt};
+    background-color: ${colors.darkerTransparent};
   }
 
   .ant-drawer-close {

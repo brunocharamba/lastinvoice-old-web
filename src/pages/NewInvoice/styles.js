@@ -1,39 +1,87 @@
 import styled from 'styled-components'
+import { isMobile } from 'react-device-detect'
+
 import { colors } from '../../styles'
 
 const Container = styled.div`
+  /* display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center; */
+
   display: flex;
   flex: 1;
   justify-content: center;
   align-items: center;
 
+  background-image: linear-gradient(to top, ${colors.asbestos}, ${colors.wetAsphalt});
+
+  min-width: ${!isMobile ? '720px' : 740 + 'px'};
+  max-width: ${!isMobile ? '720px' : 740 + 'px'};
+
   & #print-wrapper {
     padding: 10px;
-    margin: 100px 0 0 0;
+    margin: 20px 0;
+    background-color: ${colors.clouds};
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
   }
-`
-
-const ModelWrapper = styled.div`
-  border: 1px solid black;
 `
 
 const Menu = styled.div`
-  position: absolute;
-  top: 60px;
-  height: 38px;
-
-  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  margin: 20px 0;
+  /* max-width: 720px;
+  min-width: 720px; */
+  min-width: ${!isMobile ? '720px' : 720 + 'px'};
+  max-width: ${!isMobile ? '720px' : 720 + 'px'};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
 `
 
 const Button = styled.a`
-  height: 50px;
-  padding: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5px;
+  margin: 0 5px;
   color: ${colors.clouds};
-  background-color: ${colors.midnightBlue};
+  background-color: ${colors.darkTransparent};
+  border-radius: 50px;
+  transform: scale(1);
+  transition: 0.25s;
+
+  & span {
+    max-width: auto;
+    margin: 0 8px;
+    transition: 0.25s;
+  }
+
+  & div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    & > svg {
+      /* background-color: ${colors.lightTransparent}; */
+      background-color: ${colors.transparent};
+      padding: 5px;
+      border-radius: 50px;
+    }
+  }
 
   &:hover {
     text-decoration: none;
+    background-color: ${colors.peterRiver};
+    color: ${colors.clouds};
+    transform: scale(1.25);
+  }
+
+  &:hover div {
+    color: ${colors.belizeHole};
   }
 `
 
-export { Container, ModelWrapper, Menu, Button }
+export { Container, Menu, Button }

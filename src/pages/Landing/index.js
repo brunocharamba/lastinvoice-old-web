@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { FaFileAlt, FaRegCreditCard, FaBriefcase, FaBars } from 'react-icons/fa'
+import { FaFileAlt, FaRegCreditCard, FaBriefcase, FaBars, FaTwitter, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { isMobile } from 'react-device-detect'
+
+import { Menu, Dropdown, Button, message, Tooltip } from 'antd'
 
 import { Container, Background, Wrapper, Top, Middle, Announcement, Widgets, WidgetRow, Widget, StyledDrawer } from './styles'
 import { colors } from '../../styles'
@@ -14,7 +16,7 @@ function Landing() {
     return !isMobile ? (
       <div>
         <h3>
-          <a>planos</a>
+          <a title="Ver planos">planos</a>
         </h3>
         <h3>
           <a>ajuda</a>
@@ -46,6 +48,31 @@ function Landing() {
           </div>
         </StyledDrawer>
       </div>
+    )
+  }
+
+  const renderFooter = () => {
+    return (
+      <>
+        <div>LastReceipt © 2020</div>
+        <div>
+          <a>Privacidade</a>
+        </div>
+        <div>
+          <a>Contato</a>
+        </div>
+        <div id="networks">
+          <a href="https://twitter.com/google" target="_blank" rel="noreferrer">
+            <FaTwitter size={20} />
+          </a>
+          <a href="https://twitter.com/google" target="_blank" rel="noreferrer">
+            <FaFacebook size={20} />
+          </a>
+          <a href="https://twitter.com/google" target="_blank" rel="noreferrer">
+            <FaLinkedin size={20} />
+          </a>
+        </div>
+      </>
     )
   }
 
@@ -107,9 +134,7 @@ function Landing() {
           </WidgetRow>
         </Widgets>
       </Wrapper>
-      <Announcement>
-        <div>Anuncio</div>
-      </Announcement>
+      <Announcement>{renderFooter()}</Announcement>
     </Container>
   )
 }
