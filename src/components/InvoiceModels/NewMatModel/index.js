@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Avatar from '@material-ui/core/Avatar'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
@@ -8,12 +8,16 @@ import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
+
+import RoundButton from '../../../components/RoundButton'
+
 import CurrencyFormat from 'react-currency-format'
 import { Creators as Actions } from '../../../store/ducks/invoice'
 
+import { DatePicker, Tooltip } from 'antd'
 import moment from 'moment'
 
-import Paper from '@material-ui/core/Paper'
+import { FaPlus, FaMinus } from 'react-icons/fa'
 
 import {
   Container,
@@ -24,30 +28,32 @@ import {
   StyledTableCell,
   StyledTableRow,
   StyledContentEditable,
+  StyledDatePicker,
   MyTable,
   MyTableHeaderRow,
   MyTableRow,
   MyTableCell,
 } from './styles'
 
-const useStyles = makeStyles({
-  table: { minWidth: 700 },
-  desc: { width: 290, maxWidth: 290 },
-  code: { width: 120, maxWidth: 120 },
-  count: { width: 50, maxWidth: 50 },
-  price: { width: 100, maxWidth: 100 },
-})
-
 function createData(name, code, count, price) {
   return { name, code, count, price }
 }
 const defaultRows = [createData('Produto 1', 'AD23A', 1, 398.99), createData('Produto 2', '87ZER', 1, 100.9), createData('Produto 3', 'ZMI1070', 1, 210.0)]
 
-function NewMatModel({ isPreview }) {
+function NewMatModel({ isPreview, showButtons }) {
   const emmiter = useSelector((state) => state.invoice.emmiter)
   const receiver = useSelector((state) => state.invoice.receiver)
   const data = useSelector((state) => state.invoice.data)
   const dispatch = useDispatch()
+
+  const useStyles = makeStyles({
+    table: { minWidth: 700 },
+    input: { width: 20, maxWidth: 20 },
+    desc: { width: showButtons ? 290 : 330, maxWidth: showButtons ? 290 : 330 },
+    code: { width: 120, maxWidth: 120 },
+    count: { width: 50, maxWidth: 50 },
+    price: { width: 100, maxWidth: 100 },
+  })
 
   const handleFocus = () => {
     setTimeout(() => {
@@ -75,11 +81,17 @@ function NewMatModel({ isPreview }) {
     dispatch(Actions.setData({ ...data, total: newTotal, products: prods }))
   }
 
+  const handleRemove = (id) => {
+    var _products = data.products.filter((item) => item.id !== id)
+
+    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0)
+
+    dispatch(Actions.setData({ ...data, total: newTotal, products: _products }))
+  }
+
   const handleEdit = (id, field, value) => {
     var _products = [...data.products]
     var index = _products.findIndex((p) => p.id === id)
-
-    console.log(id, field, value)
 
     _products[index] = { ..._products[index], [field]: value }
     const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0)
@@ -97,23 +109,62 @@ function NewMatModel({ isPreview }) {
     dispatch(Actions.setData({ ...data, total: newTotal, products: _products }))
   }
 
+  const getBase64 = (e) => {
+    var file = e.target.files[0]
+    let reader = new FileReader()
+
+    if (file && file.type.match('image.*')) {
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        dispatch(Actions.setEmmiter({ ...emmiter, logo: reader.result }))
+      }
+      reader.onerror = function (error) {
+        console.log('Error: ', error)
+      }
+    }
+  }
+
+  const buildMessage = () => {
+    // const message = `A ${
+    //   emmiter.name ?? '[NOME DA EMPRESA/FISICA]'
+    // }, inscrita no CNPJ/MF sob nº 21.227.107/0001-47, com sede e foro na Avenida Conselheiro Aguiar, 2966, Boa Viagem, Recife, neste ato presentada na Forma de seu contrato social e de outro lado o contratante denominado de “CLIENTE”, resolvem celebrar o presente contrato de venda, nas condições acima.`
+
+    const first = `A ${emmiter.name ?? '[NOME EMPRESA/FORNECEDOR]'}`
+    const third = `, neste ato apresentada na Forma de seu contrato social e de outro lado o denominado de “CLIENTE”, resolvem celebrar o presente contrato de venda, nas condições acima.`
+
+    return first + third
+  }
   const classes = useStyles()
+  const inputRef = React.useRef(null)
+
   return (
     <Container id="huw">
       <Top>
         <div id="company">
-          <Avatar id="logo" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.pg">
-            LOGO
-          </Avatar>
+          <input ref={inputRef} type="file" style={{ display: 'none' }} accept="image/*" onChange={(e) => getBase64(e)} />
+          <Tooltip title="LOGO">
+            <Avatar
+              id="logo"
+              src={emmiter.logo}
+              onClick={() => {
+                inputRef.current.click()
+              }}
+            >
+              LOGO
+            </Avatar>
+          </Tooltip>
           <div id="logoTitle">
-            <StyledContentEditable
-              html={emmiter.name}
-              placeholder={'[NOME DA EMPRESA]'}
-              tagName="h1"
-              disabled={false}
-              onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, name: event.target.value }))}
-              onFocus={() => handleFocus()}
-            />
+            <Tooltip title="Prompt Text">
+              <StyledContentEditable
+                html={emmiter.name}
+                placeholder={'[NOME DA EMPRESA]'}
+                tagName="h1"
+                upper
+                disabled={false}
+                onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, name: event.target.value }))}
+                onFocus={() => handleFocus()}
+              />
+            </Tooltip>
             <StyledContentEditable
               html={emmiter.site}
               placeholder={'[NOME DO SITE]'}
@@ -136,24 +187,24 @@ function NewMatModel({ isPreview }) {
               onFocus={() => handleFocus()}
               maxlength="4"
             />
-            <br />
-            <StyledContentEditable
+            {/* <StyledContentEditable
               html={data.date}
               placeholder={moment(data.date).format('DD/MM/YYYY')}
               tagName="h4"
               disabled={false}
               onChange={(event) => dispatch(Actions.setData({ ...data, date: event.target.value }))}
               onFocus={() => handleFocus()}
-            />
+            /> */}
+            <StyledDatePicker defaultValue={moment('01/01/2020', 'DD/MM/YYYY')} format={'DD/MM/YYYY'} />
           </div>
           <div id="details">
-            <AccountCircleIcon style={{ fontSize: 80 }} />
             <div>
               <div id="add">
                 <StyledContentEditable
                   html={receiver.address.city}
                   placeholder={'[CIDADE]'}
                   tagName="h5"
+                  upper
                   disabled={false}
                   onChange={(event) => dispatch(Actions.setReceiver({ ...receiver, address: { ...receiver.address, city: event.target.value } }))}
                   onFocus={() => handleFocus()}
@@ -163,6 +214,7 @@ function NewMatModel({ isPreview }) {
                   html={receiver.address.state}
                   placeholder={'[UF]'}
                   tagName="h5"
+                  upper
                   disabled={false}
                   onChange={(event) => dispatch(Actions.setReceiver({ ...receiver, address: { ...receiver.address, state: event.target.value } }))}
                   onFocus={() => handleFocus()}
@@ -172,6 +224,7 @@ function NewMatModel({ isPreview }) {
                 html={receiver.name}
                 placeholder={'[NOME DO CLIENTE]'}
                 tagName="h2"
+                upper
                 disabled={false}
                 onChange={(event) => dispatch(Actions.setReceiver({ ...receiver, name: event.target.value }))}
                 onFocus={() => handleFocus()}
@@ -180,6 +233,7 @@ function NewMatModel({ isPreview }) {
                 html={receiver.document.number}
                 placeholder={'[DOCUMENTO CPF/CNPJ/RG]'}
                 tagName="h5"
+                upper
                 disabled={false}
                 onChange={(event) => dispatch(Actions.setReceiver({ ...receiver, document: { ...receiver.document, number: event.target.value } }))}
                 onFocus={() => handleFocus()}
@@ -188,6 +242,7 @@ function NewMatModel({ isPreview }) {
                 html={receiver.phone}
                 placeholder={'[TELEFONE]'}
                 tagName="h5"
+                upper
                 disabled={false}
                 onChange={(event) => dispatch(Actions.setReceiver({ ...receiver, phone: event.target.value }))}
                 onFocus={() => handleFocus()}
@@ -209,6 +264,11 @@ function NewMatModel({ isPreview }) {
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
+                {showButtons && (
+                  <StyledTableCell className={classes.input} align="center">
+                    #
+                  </StyledTableCell>
+                )}
                 <StyledTableCell className={classes.desc}>Descrição</StyledTableCell>
                 <StyledTableCell className={classes.code} align="right">
                   Código
@@ -225,11 +285,17 @@ function NewMatModel({ isPreview }) {
               {data?.products?.length > 0 &&
                 data?.products.map((row) => (
                   <StyledTableRow key={row.id}>
+                    {showButtons && (
+                      <StyledTableCell className={classes.input} component="th" scope="row">
+                        <RoundButton onClick={() => handleRemove(row.id)} size={15} icon={FaMinus} />
+                      </StyledTableCell>
+                    )}
                     <StyledTableCell className={classes.desc} component="th" scope="row">
                       <StyledContentEditable
                         html={row.name}
                         placeholder={'[PRODUTO]'}
                         tagName="strong"
+                        upper
                         disabled={false}
                         onChange={(event) => handleEdit(row.id, 'name', event.target.value)}
                         onFocus={() => handleFocus()}
@@ -240,6 +306,7 @@ function NewMatModel({ isPreview }) {
                         html={row.code}
                         placeholder={'[CÓDIGO]'}
                         tagName="strong"
+                        upper
                         disabled={false}
                         onChange={(event) => handleEdit(row.id, 'code', event.target.value)}
                         onFocus={() => handleFocus()}
@@ -275,13 +342,11 @@ function NewMatModel({ isPreview }) {
                   </StyledTableRow>
                 ))}
               <StyledTableRow>
-                <StyledTableCell rowSpan={4}>
-                  <a onClick={() => handleAdd()}>Adicionar</a>
-                </StyledTableCell>
-                <StyledTableCell align="right" colSpan={2}>
+                <StyledTableCell rowSpan={1}>{showButtons && <RoundButton onClick={() => handleAdd()} size={15} icon={FaPlus} />}</StyledTableCell>
+                <StyledTableCell align="right" rowSpan={1} colSpan={3}>
                   Subtotal
                 </StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell rowSpan={1} align="right">
                   <CurrencyFormat
                     value={data?.total}
                     displayType="text"
@@ -296,15 +361,15 @@ function NewMatModel({ isPreview }) {
             </TableBody>
           </Table>
         </TableContainer>
-        <div id="signature">
+        {/* <div id="signature">
           <p>___________________________________________________________________</p>
           <p>Assinatura</p>
-        </div>
+        </div> */}
       </Middle>
       <Bottom>
         <StyledContentEditable
           id="message"
-          html={emmiter.message}
+          html={buildMessage()}
           tagName="h5"
           disabled={false}
           onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, message: event.target.value }))}

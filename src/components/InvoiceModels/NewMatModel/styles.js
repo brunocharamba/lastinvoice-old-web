@@ -1,13 +1,16 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { withStyles } from '@material-ui/core/styles'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 import ContentEditable from 'react-contenteditable'
+import { DatePicker } from 'antd'
+import { fadeIn } from 'react-animations'
 
 import { colors } from '../../../styles'
 
+const animation = keyframes`${fadeIn}`
+
 const Container = styled.div`
-  /* @import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap'); */
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -17,9 +20,10 @@ const Container = styled.div`
 
   margin: 10px;
   border: 1px solid black;
+  animation: 2s ${animation};
+  opacity: 1 !important;
 
   & * {
-    /* font-family: 'Julius Sans One', sans-serif !important; */
     font-family: 'Montserrat', sans-serif;
   }
 
@@ -50,6 +54,10 @@ const Top = styled.div`
     & #logo {
       height: 100px;
       width: 100px;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     & #logoTitle {
@@ -126,6 +134,7 @@ const Middle = styled.div`
   #currency {
     max-width: 100px;
     text-align: right;
+    margin: 0 0 0 -15px;
     padding: 2px;
     border: none;
     background-color: rgba(0, 0, 0, 0);
@@ -135,6 +144,7 @@ const Middle = styled.div`
       border-radius: 5px;
       border: 1px solid ${colors.asbestos};
       margin: -1px;
+      opacity: 1;
     }
   }
 `
@@ -210,6 +220,7 @@ const StyledTableRow = withStyles((theme) => ({
 const StyledContentEditable = styled(ContentEditable)`
   box-sizing: border-box;
   padding: 2px;
+  text-transform: ${(props) => props.upper && 'uppercase'};
 
   &:hover {
     background-color: ${colors.asbestos};
@@ -231,4 +242,36 @@ const StyledContentEditable = styled(ContentEditable)`
   }
 `
 
-export { Container, Top, Middle, Bottom, Separator, StyledTableCell, StyledTableRow, StyledContentEditable }
+const StyledDatePicker = styled(DatePicker)`
+  background-color: ${colors.midnightBlue};
+  box-sizing: border-box;
+  border: 0;
+
+  &:hover {
+    background-color: ${colors.asbestos};
+    border-radius: 5px;
+  }
+
+  &:focus {
+    background-color: ${colors.asbestos};
+    border-radius: 5px;
+    border: 1px solid ${colors.asbestos} !important;
+    margin: -1px;
+    outline-width: 0;
+  }
+
+  & * {
+    color: ${colors.clouds} !important;
+    /* background-color: ${colors.midnightBlue}; */
+  }
+
+  & input {
+    margin: 0 -10px 0 -8px;
+  }
+
+  & span {
+    display: none;
+  }
+`
+
+export { Container, Top, Middle, Bottom, Separator, StyledTableCell, StyledTableRow, StyledContentEditable, StyledDatePicker }

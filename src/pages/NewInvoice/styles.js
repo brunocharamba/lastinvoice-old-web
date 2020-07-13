@@ -1,23 +1,19 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { isMobile } from 'react-device-detect'
+import { rotateInUpRight } from 'react-animations'
 
 import { colors } from '../../styles'
 
+const animation = keyframes`${rotateInUpRight}`
+
 const Container = styled.div`
-  /* display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center; */
-
-  display: flex;
-  flex: 1;
-  justify-content: center;
   align-items: center;
-
   background-image: linear-gradient(to top, ${colors.asbestos}, ${colors.wetAsphalt});
-
-  min-width: ${!isMobile ? '720px' : 740 + 'px'};
-  max-width: ${!isMobile ? '720px' : 740 + 'px'};
+  min-width: ${isMobile && '740px'};
+  max-width: ${isMobile && '740px'};
 
   & #print-wrapper {
     padding: 10px;
@@ -26,11 +22,13 @@ const Container = styled.div`
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
     -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
+
+    /* animation: 1.25s ${animation}; */
   }
 `
 
 const Menu = styled.div`
-  margin: 20px 0;
+  margin: 20px -50px 0 0;
   /* max-width: 720px;
   min-width: 720px; */
   min-width: ${!isMobile ? '720px' : 720 + 'px'};

@@ -2,6 +2,8 @@ import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Creators as Actions } from '../../../store/ducks/invoice'
 
+import { Tooltip } from 'antd'
+
 import 'antd/dist/antd.css'
 import { Container, Information, Fill, FillD, Data, HorizontalSeparator, StyledInput, StyledContentEditable } from './styles'
 
@@ -23,13 +25,15 @@ function HalfModel() {
         <div id="company">
           <h5>http://www.google.com</h5>
           {/* <p>email</p> */}
-          <StyledContentEditable
-            // html={emmiter.email || 'Type your email...'}
-            html={emmiter.email}
-            disabled={false}
-            onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, email: event.target.value }))}
-            placeholder={'Hello, World!'}
-          />
+          <Tooltip title="logo">
+            <StyledContentEditable
+              // html={emmiter.email || 'Type your email...'}
+              html={emmiter.email}
+              disabled={false}
+              onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, email: event.target.value }))}
+              placeholder={'Hello, World!'}
+            />
+          </Tooltip>
         </div>
         <button onClick={() => dispatch(Actions.setEmmiter({ ...emmiter, name: 'Test Name' }))}>AAA</button>
         <button

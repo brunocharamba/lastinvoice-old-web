@@ -1,68 +1,66 @@
-import React, { useRef, useState } from 'react'
-import { FaFileAlt, FaArrowDown, FaFont, FaBars } from 'react-icons/fa'
+import React, { useState, useRef, useEffect } from 'react'
+import { FaFileAlt, FaArrowDown, FaPrint } from 'react-icons/fa'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import { saveAs } from 'file-saver'
 
 import Header from '../../components/Header'
 import NewMatModel from '../../components/InvoiceModels/NewMatModel'
+import HalfModel from '../../components/InvoiceModels/HalfModel'
 
 import { Container, Menu, Button } from './styles'
 
 function NewInvoice() {
+  const [createPdf, setCreatePdf] = useState({ showButtons: true, toPrint: true })
   const myRef = useRef()
 
-  const handleSave = (e) => {
+  const handlePdf = (e, toPrint) => {
     e.preventDefault()
-    // const input = document.getElementById('pdf-wrapper')
-    console.log(myRef.current.offsetHeight, myRef.current.children[0], -window.scrollX)
-    const input = myRef.current.children[0]
-
-    // html2canvas(input, { scrollX: -window.scrollX - 200, scrollY: -window.scrollY, height: 1008, width: 720 }).then((canvas) => {
-    html2canvas(input, { scrollY: -window.scrollY, scrollX: -8, scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png')
-      // const imgData = canvas.toDataURL()
-
-      // saveAs(imgData)
-
-      const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true, compressPdf: true })
-      pdf.addImage(imgData, 'PNG', 20, 20, 180, 252, '', 'FAST')
-      pdf.save('download.pdf')
-    })
+    setCreatePdf({ showButtons: false, toPrint })
   }
+
+  useEffect(() => {
+    if (!createPdf.showButtons) {
+      const input = myRef.current.children[0]
+
+      html2canvas(input, { scrollY: -window.scrollY, scrollX: -8, scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png')
+        const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true, compressPdf: true })
+        pdf.addImage(imgData, 'PNG', 20, 20, 180, 252, '', 'FAST')
+
+        if (createPdf.toPrint) pdf.output('dataurlnewwindow')
+        else pdf.save('invoice.pdf')
+
+        // pdf.output('dataurlnewwindow')
+
+        setCreatePdf({ showButtons: true, toPrint: true })
+      })
+    }
+  }, [createPdf])
 
   return (
     <Container>
       <Header></Header>
       <Menu>
-        <Button onClick={() => alert('test')}>
-          <div>
-            <FaFont size={30} />
-          </div>
-          {/* <span>MODELO</span> */}
-        </Button>
-        <Button onClick={() => alert('test')}>
-          <div>
-            <FaBars size={30} />
-          </div>
-          {/* <span>MODELO</span> */}
-        </Button>
-        <Button onClick={() => alert('test')}>
-          <div>
-            <FaFileAlt size={30} />
-          </div>
-          {/* <span>MODELO</span> */}
-        </Button>
-        <Button onClick={(e) => handleSave(e)}>
-          <div>
-            <FaArrowDown size={30} />
-          </div>
-          {/* <span>DOWNLOAD</span> */}
-        </Button>
+        <Tooltip title="Imprimir" aria-label="print" placement="top">
+          <Button onClick={(e) => handlePdf(e, true)}>
+            <div>
+              <FaPrint size={30} />
+            </div>
+          </Button>
+        </Tooltip>
+        <Tooltip title="Baixar" aria-label="download" placement="top">
+          <Button onClick={(e) => handlePdf(e, false)}>
+            <div>
+              <FaArrowDown size={30} />
+            </div>
+          </Button>
+        </Tooltip>
       </Menu>
       <div id="print-wrapper" ref={myRef}>
-        <NewMatModel width="300px"></NewMatModel>
+        <NewMatModel width="300px" showButtons={createPdf.showButtons}></NewMatModel>
+        {/* <HalfModel width="300px" showButtons={createPdf.showButtons}></HalfModel> */}
       </div>
     </Container>
   )
