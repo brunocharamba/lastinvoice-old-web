@@ -1,14 +1,14 @@
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { withStyles } from '@material-ui/core/styles'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 import ContentEditable from 'react-contenteditable'
 import { DatePicker } from 'antd'
-import { fadeIn } from 'react-animations'
+// import { fadeIn } from 'react-animations'
 
 import { colors } from '../../../styles'
 
-const animation = keyframes`${fadeIn}`
+// const animation = keyframes`${fadeIn}`
 
 const Container = styled.div`
   display: flex;
@@ -20,8 +20,6 @@ const Container = styled.div`
 
   margin: 10px;
   border: 1px solid black;
-  animation: 2s ${animation};
-  opacity: 1 !important;
 
   & * {
     font-family: 'Montserrat', sans-serif;

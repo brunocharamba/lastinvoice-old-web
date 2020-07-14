@@ -1,10 +1,10 @@
 import styled, { keyframes } from 'styled-components'
 import { isMobile } from 'react-device-detect'
-import { rotateInUpRight } from 'react-animations'
+import { fadeIn } from 'react-animations'
 
 import { colors } from '../../styles'
 
-const animation = keyframes`${rotateInUpRight}`
+const animation = keyframes`${fadeIn}`
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +23,8 @@ const Container = styled.div`
     -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.8);
 
-    /* animation: 1.25s ${animation}; */
+    animation: 1.5s ${animation};
+    opacity: 1 !important;
   }
 `
 

@@ -23,6 +23,7 @@ function NewInvoice() {
   useEffect(() => {
     if (!createPdf.showButtons) {
       const input = myRef.current.children[0]
+      console.log(myRef.current)
 
       html2canvas(input, { scrollY: -window.scrollY, scrollX: -8, scale: 2 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png')

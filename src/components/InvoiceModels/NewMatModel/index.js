@@ -77,14 +77,17 @@ function NewMatModel({ isPreview, showButtons }) {
     let prods = data.products
     prods.push(prod)
 
-    const newTotal = prods.reduce((sum, { basePrice, count }) => sum + basePrice * count, 0)
+    const newTotal = prods.reduce((sum, { price, count }) => sum + price * count, 0) + data.taxes + data.delivery - data.discount
+
+    console.log(prods, newTotal)
+
     dispatch(Actions.setData({ ...data, total: newTotal, products: prods }))
   }
 
   const handleRemove = (id) => {
     var _products = data.products.filter((item) => item.id !== id)
 
-    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0)
+    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0) + data.taxes + data.delivery - data.discount
 
     dispatch(Actions.setData({ ...data, total: newTotal, products: _products }))
   }
@@ -94,9 +97,32 @@ function NewMatModel({ isPreview, showButtons }) {
     var index = _products.findIndex((p) => p.id === id)
 
     _products[index] = { ..._products[index], [field]: value }
-    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0)
+    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0) + data.taxes + data.delivery - data.discount
 
     dispatch(Actions.setData({ ...data, total: newTotal, products: _products }))
+  }
+
+  const handleEditValues = (field, values) => {
+    const fieldName = field + 'Formatted'
+    const fieldValue = parseFloat(values.value)
+    const fieldFormatted = values.formattedValue
+
+    let newTotal = data.products.reduce((sum, { price, count }) => sum + price * count, 0)
+
+    switch (field) {
+      case 'discount':
+        newTotal += data.taxes + data.delivery - parseFloat(fieldValue)
+        break
+      case 'taxes':
+        newTotal += data.delivery - data.discount + parseFloat(fieldValue)
+        break
+      case 'delivery':
+        newTotal += data.taxes - data.discount + parseFloat(fieldValue)
+        break
+      default:
+    }
+
+    dispatch(Actions.setData({ ...data, total: newTotal, [fieldName]: fieldFormatted, [field]: fieldValue }))
   }
 
   const handleEditPrice = (id, values) => {
@@ -104,7 +130,7 @@ function NewMatModel({ isPreview, showButtons }) {
     var index = _products.findIndex((p) => p.id === id)
 
     _products[index] = { ..._products[index], formattedBasePrice: values.formattedValue, price: parseFloat(values.value) }
-    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0)
+    const newTotal = _products.reduce((sum, { price, count }) => sum + price * count, 0) + data.taxes + data.delivery - data.discount
 
     dispatch(Actions.setData({ ...data, total: newTotal, products: _products }))
   }
@@ -134,6 +160,7 @@ function NewMatModel({ isPreview, showButtons }) {
 
     return first + third
   }
+
   const classes = useStyles()
   const inputRef = React.useRef(null)
 
@@ -142,7 +169,7 @@ function NewMatModel({ isPreview, showButtons }) {
       <Top>
         <div id="company">
           <input ref={inputRef} type="file" style={{ display: 'none' }} accept="image/*" onChange={(e) => getBase64(e)} />
-          <Tooltip title="LOGO">
+          <Tooltip title="Escolha seu logotipo">
             <Avatar
               id="logo"
               src={emmiter.logo}
@@ -154,17 +181,15 @@ function NewMatModel({ isPreview, showButtons }) {
             </Avatar>
           </Tooltip>
           <div id="logoTitle">
-            <Tooltip title="Prompt Text">
-              <StyledContentEditable
-                html={emmiter.name}
-                placeholder={'[NOME DA EMPRESA]'}
-                tagName="h1"
-                upper
-                disabled={false}
-                onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, name: event.target.value }))}
-                onFocus={() => handleFocus()}
-              />
-            </Tooltip>
+            <StyledContentEditable
+              html={emmiter.name}
+              placeholder={'[NOME DA EMPRESA]'}
+              tagName="h1"
+              upper
+              disabled={false}
+              onChange={(event) => dispatch(Actions.setEmmiter({ ...emmiter, name: event.target.value }))}
+              onFocus={() => handleFocus()}
+            />
             <StyledContentEditable
               html={emmiter.site}
               placeholder={'[NOME DO SITE]'}
@@ -264,11 +289,9 @@ function NewMatModel({ isPreview, showButtons }) {
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                {showButtons && (
-                  <StyledTableCell className={classes.input} align="center">
-                    #
-                  </StyledTableCell>
-                )}
+                <StyledTableCell className={classes.input} align="center">
+                  #
+                </StyledTableCell>
                 <StyledTableCell className={classes.desc}>Descrição</StyledTableCell>
                 <StyledTableCell className={classes.code} align="right">
                   Código
@@ -283,13 +306,11 @@ function NewMatModel({ isPreview, showButtons }) {
             </TableHead>
             <TableBody>
               {data?.products?.length > 0 &&
-                data?.products.map((row) => (
+                data?.products.map((row, i) => (
                   <StyledTableRow key={row.id}>
-                    {showButtons && (
-                      <StyledTableCell className={classes.input} component="th" scope="row">
-                        <RoundButton onClick={() => handleRemove(row.id)} size={15} icon={FaMinus} />
-                      </StyledTableCell>
-                    )}
+                    <StyledTableCell className={classes.input} component="th" scope="row">
+                      {showButtons ? <RoundButton onClick={() => handleRemove(row.id)} size={15} icon={FaMinus} /> : <strong>{i + 1}</strong>}
+                    </StyledTableCell>
                     <StyledTableCell className={classes.desc} component="th" scope="row">
                       <StyledContentEditable
                         html={row.name}
@@ -322,7 +343,6 @@ function NewMatModel({ isPreview, showButtons }) {
                         onFocus={() => handleFocus()}
                       />
                     </StyledTableCell>
-
                     <StyledTableCell className={classes.price} align="right">
                       <CurrencyFormat
                         autoComplete="nope"
@@ -334,13 +354,69 @@ function NewMatModel({ isPreview, showButtons }) {
                         prefix={'R$'}
                         value={row.formattedBasePrice}
                         onValueChange={(values) => handleEditPrice(row.id, values)}
-                        // onValueChange={(values) => setData({ ...data, formPrice: values.formattedValue, formBasePrice: parseFloat(values.value) })}
                         autoComplete="nope"
                         onFocus={() => handleFocus()}
                       />
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
+              <StyledTableRow>
+                <StyledTableCell align="right" rowSpan={1} colSpan={4}>
+                  Impostos
+                </StyledTableCell>
+                <StyledTableCell rowSpan={1} align="right">
+                  <CurrencyFormat
+                    id="currency"
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    prefix={'R$'}
+                    value={data.taxesFormatted}
+                    onValueChange={(values) => handleEditValues('taxes', values)}
+                    autoComplete="nope"
+                    onFocus={() => handleFocus()}
+                  />
+                </StyledTableCell>
+              </StyledTableRow>
+              <StyledTableRow>
+                <StyledTableCell align="right" rowSpan={1} colSpan={4}>
+                  Descontos
+                </StyledTableCell>
+                <StyledTableCell rowSpan={1} align="right">
+                  <CurrencyFormat
+                    id="currency"
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    prefix={'R$'}
+                    value={data.discountFormatted}
+                    onValueChange={(values) => handleEditValues('discount', values)}
+                    autoComplete="nope"
+                    onFocus={() => handleFocus()}
+                  />
+                </StyledTableCell>
+              </StyledTableRow>
+              <StyledTableRow>
+                <StyledTableCell align="right" rowSpan={1} colSpan={4}>
+                  Frete
+                </StyledTableCell>
+                <StyledTableCell rowSpan={1} align="right">
+                  <CurrencyFormat
+                    id="currency"
+                    thousandSeparator="."
+                    decimalSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    prefix={'R$'}
+                    value={data.deliveryFormatted}
+                    onValueChange={(values) => handleEditValues('delivery', values)}
+                    autoComplete="nope"
+                    onFocus={() => handleFocus()}
+                  />
+                </StyledTableCell>
+              </StyledTableRow>
               <StyledTableRow>
                 <StyledTableCell rowSpan={1}>{showButtons && <RoundButton onClick={() => handleAdd()} size={15} icon={FaPlus} />}</StyledTableCell>
                 <StyledTableCell align="right" rowSpan={1} colSpan={3}>
@@ -361,10 +437,6 @@ function NewMatModel({ isPreview, showButtons }) {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <div id="signature">
-          <p>___________________________________________________________________</p>
-          <p>Assinatura</p>
-        </div> */}
       </Middle>
       <Bottom>
         <StyledContentEditable

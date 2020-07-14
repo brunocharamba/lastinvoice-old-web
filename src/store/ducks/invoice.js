@@ -57,6 +57,12 @@ const INITIAL_STATE = {
     date: new Date().toLocaleDateString(),
     number: '',
     products: [],
+    discount: 0,
+    discountFormatted: 'R$0,00',
+    delivery: 0,
+    deliveryFormatted: 'R$0,00',
+    taxes: 0,
+    taxesFormatted: 'R$0,00',
     total: 0,
   },
 }
