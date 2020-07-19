@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { FaFileAlt, FaArrowDown, FaPrint } from 'react-icons/fa'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import { Creators as Actions } from '../../store/ducks/invoice'
 
 import Header from '../../components/Header'
 import NewMatModel from '../../components/InvoiceModels/NewMatModel'
@@ -13,27 +15,54 @@ import { Container, Menu, Button } from './styles'
 
 function NewInvoice() {
   const [createPdf, setCreatePdf] = useState({ showButtons: true, toPrint: true })
+  const emmiter = useSelector((state) => state.invoice.emmiter)
+
   const myRef = useRef()
+  const dispatch = useDispatch()
 
   const handlePdf = (e, toPrint) => {
     e.preventDefault()
+    dispatch(Actions.setEmmiter({ ...emmiter, name: ' ' }))
     setCreatePdf({ showButtons: false, toPrint })
   }
 
   useEffect(() => {
     if (!createPdf.showButtons) {
       const input = myRef.current.children[0]
-      console.log(myRef.current)
 
       html2canvas(input, { scrollY: -window.scrollY, scrollX: -8, scale: 2 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png')
-        const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true, compressPdf: true })
-        pdf.addImage(imgData, 'PNG', 20, 20, 180, 252, '', 'FAST')
+        const marginLeft = 20
+        const imgWidth = 180
+        const pageHeight = 252
+        const imgHeight = (canvas.height * imgWidth) / canvas.width
+        var heightLeft = imgHeight
+        var position = 10
+
+        // var link = document.createElement('a')
+        // link.download = 'my-image.png'
+        // link.href = imgData
+        // link.click()
+
+        const pdf = new jsPDF({ format: 'letter', putOnlyUsedFonts: true, compressPdf: true, pagesplit: true })
+
+        pdf.addImage(imgData, 'PNG', marginLeft, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+
+        while (heightLeft >= 0) {
+          // position += heightLeft - imgHeight // top padding for other pages
+          position = heightLeft - imgHeight - marginLeft
+          pdf.addPage()
+          pdf.addImage(imgData, 'PNG', marginLeft, position, imgWidth, imgHeight, 'FAST')
+          heightLeft -= pageHeight
+
+          console.log(position)
+        }
+
+        // pdf.addImage(imgData, 'PNG', 20, 20, 180, 252, '', 'FAST')
 
         if (createPdf.toPrint) pdf.output('dataurlnewwindow')
         else pdf.save('invoice.pdf')
-
-        // pdf.output('dataurlnewwindow')
 
         setCreatePdf({ showButtons: true, toPrint: true })
       })

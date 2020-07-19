@@ -46,13 +46,19 @@ function NewMatModel({ isPreview, showButtons }) {
   const data = useSelector((state) => state.invoice.data)
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    for (let index = 0; index < 30; index++) {
+      handleAdd()
+    }
+  }, [])
+
   const useStyles = makeStyles({
     table: { minWidth: 700 },
     input: { width: 20, maxWidth: 20 },
     desc: { width: showButtons ? 290 : 330, maxWidth: showButtons ? 290 : 330 },
     code: { width: 120, maxWidth: 120 },
     count: { width: 50, maxWidth: 50 },
-    price: { width: 100, maxWidth: 100 },
+    price: { width: 130, maxWidth: 130 },
   })
 
   const handleFocus = () => {
@@ -78,8 +84,6 @@ function NewMatModel({ isPreview, showButtons }) {
     prods.push(prod)
 
     const newTotal = prods.reduce((sum, { price, count }) => sum + price * count, 0) + data.taxes + data.delivery - data.discount
-
-    console.log(prods, newTotal)
 
     dispatch(Actions.setData({ ...data, total: newTotal, products: prods }))
   }
